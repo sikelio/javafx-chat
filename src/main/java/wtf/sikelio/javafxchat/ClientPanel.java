@@ -12,14 +12,16 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.TextFlow;
+import wtf.sikelio.javafxchat.client.Client;
 import wtf.sikelio.javafxchat.common.Message;
 
 public class ClientPanel extends Parent {
-    TextArea textToSend;
-    TextFlow receivedText;
-    ScrollPane scrollReceivedText;
-    Button sendBtn;
-    Button clearBtn;
+    private TextArea textToSend;
+    private TextFlow receivedText;
+    private ScrollPane scrollReceivedText;
+    private Button sendBtn;
+    private Button clearBtn;
+    private Client client;
 
     public ClientPanel() {
         this.textToSend = new TextArea();
@@ -32,7 +34,10 @@ public class ClientPanel extends Parent {
             @Override
             public void handle(KeyEvent keyEvent) {
                 if (keyEvent.getCode() == KeyCode.ENTER && !textToSend.getText().trim().isEmpty()) {
-                    printNewMessage(new Message("User", textToSend.getText()));
+                    Message message = new Message("User", textToSend.getText());
+
+                    printNewMessage(message);
+                    client.sendMessage(message);
 
                     textToSend.clear();
                 }
@@ -60,9 +65,14 @@ public class ClientPanel extends Parent {
         this.sendBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                printNewMessage(new Message("User", textToSend.getText()));
+                if (!textToSend.getText().trim().isEmpty()) {
+                    Message message = new Message("User", textToSend.getText());
 
-                textToSend.clear();
+                    printNewMessage(message);
+                    client.sendMessage(message);
+
+                    textToSend.clear();
+                }
             }
         });
 
@@ -97,5 +107,9 @@ public class ClientPanel extends Parent {
                 receivedText.getChildren().add(text);
             }
         });
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

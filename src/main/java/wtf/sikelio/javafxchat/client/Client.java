@@ -1,5 +1,6 @@
 package wtf.sikelio.javafxchat.client;
 
+import wtf.sikelio.javafxchat.ClientPanel;
 import wtf.sikelio.javafxchat.common.Message;
 
 import java.io.IOException;
@@ -14,6 +15,8 @@ public class Client {
     private ObjectInputStream _in;
     private ObjectOutputStream _out;
 
+    private ClientPanel view;
+
     public Client(String address, Integer port) {
         this._address = address;
         this._port = port;
@@ -22,11 +25,17 @@ public class Client {
             this._socket = new Socket(this._address, this._port);
             this._out = new ObjectOutputStream(this._socket.getOutputStream());
 
-            Thread clientSendThread = new Thread(new ClientSend(this._socket, this._out));
             Thread clientReceiveThread = new Thread(new ClientReceive(this, this._socket));
-
-            clientSendThread.start();
             clientReceiveThread.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMessage(Message message) {
+        try {
+            this._out.writeObject(message);
+            this._out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,6 +57,10 @@ public class Client {
     }
 
     protected void messageReceived(Message message) {
-        System.out.println(message.toString());
+        this.view.printNewMessage(message);
+    }
+
+    public void setView(ClientPanel view) {
+        this.view = view;
     }
 }
