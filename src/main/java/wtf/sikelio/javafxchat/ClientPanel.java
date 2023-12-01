@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.TextFlow;
 import wtf.sikelio.javafxchat.common.Message;
 
@@ -26,6 +28,16 @@ public class ClientPanel extends Parent {
         this.textToSend.setPrefWidth(375);
         this.textToSend.setPrefHeight(25);
         this.textToSend.setPromptText("Message...");
+        this.textToSend.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER && !textToSend.getText().trim().isEmpty()) {
+                    printNewMessage(new Message("User", textToSend.getText()));
+
+                    textToSend.clear();
+                }
+            }
+        });
 
         this.receivedText = new TextFlow();
         this.receivedText.setPrefWidth(325);
