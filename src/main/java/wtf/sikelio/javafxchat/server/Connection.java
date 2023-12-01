@@ -1,4 +1,4 @@
-package wtf.sikelio.server;
+package wtf.sikelio.javafxchat.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;

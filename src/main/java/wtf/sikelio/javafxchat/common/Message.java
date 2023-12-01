@@ -1,4 +1,4 @@
-package wtf.sikelio.common;
+package wtf.sikelio.javafxchat.common;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package wtf.sikelio.client;
+package wtf.sikelio.javafxchat.client;
 
 public class MainClient {
     public static void main(String[] args) {

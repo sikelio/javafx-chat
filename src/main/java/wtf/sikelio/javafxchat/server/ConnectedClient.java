@@ -1,6 +1,6 @@
-package wtf.sikelio.server;
+package wtf.sikelio.javafxchat.server;
 
-import wtf.sikelio.common.Message;
+import wtf.sikelio.javafxchat.common.Message;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
