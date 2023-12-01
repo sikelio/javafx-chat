@@ -82,8 +82,6 @@ public class ClientPanel extends Parent {
                 text.setPrefWidth(receivedText.getPrefWidth() - 20);
                 text.setAlignment(Pos.CENTER_LEFT);
 
-                System.out.println(text.getText());
-
                 receivedText.getChildren().add(text);
             }
         });
