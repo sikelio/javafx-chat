@@ -2,10 +2,12 @@ package wtf.sikelio.javafxchat.server;
 
 import wtf.sikelio.javafxchat.common.Message;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ConnectedClient implements Runnable {
     private static Integer _idCounter = 0;
@@ -37,23 +39,18 @@ public class ConnectedClient implements Runnable {
 
             boolean isActive = true;
 
-            while (isActive) {
+            while (true) {
                 Message message = (Message) this._in.readObject();
-
-                if (message != null) {
-                    message.setSender(String.valueOf(this._id));
-
-                    this._server.broadcastMessage(message, this._id);
-                } else {
-                    this._server.disconnectedClient(this);
-
-                    isActive = false;
-                }
+                message.setSender(String.valueOf(this._id));
+                this._server.broadcastMessage(message, this._id);
             }
+        } catch (EOFException | SocketException e) {
+            System.out.println("Client " + this._id + " disconnected.");
+            this._server.disconnectedClient(this);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-
-
+        } finally {
+            closeClient();
         }
     }
 
@@ -76,9 +73,19 @@ public class ConnectedClient implements Runnable {
 
     public void closeClient() {
         try {
-            this._in.close();
-            this._out.close();
-            this._socket.close();
+            if (this._in != null) this._in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (this._out != null) this._out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (this._socket != null) this._socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
