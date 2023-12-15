@@ -36,6 +36,16 @@ public class Client {
         try {
             this._out.writeObject(message);
             this._out.flush();
+
+            if (message.getContent().trim().equalsIgnoreCase("exit")) {
+                try {
+                    this._socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                System.exit(0);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
